@@ -1,0 +1,7 @@
+{
+  "name": "Mike's AI Forge",
+  "description": "A hub for Mike's YouTube audience to find AI tools, deploy one-click workflows, and use powerful content automation utilities, including video/audio transcription. I test it on YouTube. You deploy it in one click.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

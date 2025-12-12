@@ -1,0 +1,61 @@
+{
+  "hash": "85ca93b2",
+  "configHash": "9e823bb6",
+  "lockfileHash": "cc18dc59",
+  "browserHash": "db91551f",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "2a7cc563",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "2c5ded76",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "c9559a11",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "c59fa83d",
+      "needsInterop": false
+    },
+    "@sentry/react": {
+      "src": "../../node_modules/@sentry/react/esm/index.js",
+      "file": "@sentry_react.js",
+      "fileHash": "fb9250be",
+      "needsInterop": false
+    },
+    "axios": {
+      "src": "../../node_modules/axios/index.js",
+      "file": "axios.js",
+      "fileHash": "3b97d91a",
+      "needsInterop": false
+    },
+    "@google/genai": {
+      "src": "../../node_modules/@google/genai/dist/web/index.mjs",
+      "file": "@google_genai.js",
+      "fileHash": "c6f8b06c",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-PLDDZCKN": {
+      "file": "chunk-PLDDZCKN.js"
+    },
+    "chunk-QLJLW6ED": {
+      "file": "chunk-QLJLW6ED.js"
+    },
+    "chunk-PR4QN5HX": {
+      "file": "chunk-PR4QN5HX.js"
+    }
+  }
+}

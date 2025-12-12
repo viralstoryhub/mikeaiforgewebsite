@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mike's AI Forge</title>
+
+    <!-- Primary SEO -->
+    <meta name="description" content="Mike's AI Forge — battle-tested AI tools, one-click workflows, a vibrant community forum, and curated AI news for creators." />
+    <link rel="canonical" href="https://mikesaiforge.netlify.app/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Mike's AI Forge" />
+    <meta property="og:description" content="Battle-tested AI tools, one-click automations, community forum, and curated AI news for creators." />
+    <meta property="og:url" content="https://mikesaiforge.netlify.app/" />
+    <meta property="og:image" content="/vite.svg" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Mike's AI Forge" />
+    <meta name="twitter:description" content="Battle-tested AI tools, one-click automations, community forum, and curated AI news for creators." />
+    <meta name="twitter:image" content="/vite.svg" />
+
+    <!-- Calendly (CSS for inline widget) -->
+    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
+
+    <!-- JSON-LD Organization -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Mike's AI Forge",
+        "url": "https://mikesaiforge.netlify.app/",
+        "logo": "/vite.svg",
+        "sameAs": [
+          "https://www.youtube.com/",
+          "https://twitter.com/"
+        ]
+      }
+    </script>
+
+    <!-- Google Analytics - Configured via environment variable -->
+    <!-- GA initialization is handled in analyticsService.ts -->
+  </head>
+  <body class="bg-dark-primary">
+    <!-- Hidden Netlify form templates for detection -->
+    <div style="display:none" aria-hidden="true">
+      <form name="contact" netlify netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="contact" />
+        <input type="text" name="name" />
+        <input type="email" name="email" />
+        <textarea name="message"></textarea>
+        <input type="text" name="bot-field" />
+      </form>
+      <form name="newsletter" netlify>
+        <input type="hidden" name="form-name" value="newsletter" />
+        <input type="email" name="email" />
+      </form>
+      <form name="lead-magnet" netlify netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="lead-magnet" />
+        <input type="text" name="name" />
+        <input type="email" name="email" />
+        <input type="text" name="bot-field" />
+      </form>
+    </div>
+
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

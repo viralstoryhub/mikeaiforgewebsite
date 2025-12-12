@@ -1,0 +1,351 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   THEME SYSTEM - CSS VARIABLES
+   ============================================ */
+
+/* Dark Theme (Default) */
+.theme-dark,
+:root {
+  --bg-primary: #0d0d0d;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #262626;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --text-tertiary: #808080;
+  --border-color: #333333;
+  --accent-primary: #0085ff;
+  --accent-secondary: #8a2be2;
+  --glow-color: rgba(0, 133, 255, 0.15);
+  --card-hover: rgba(0, 133, 255, 0.1);
+}
+
+/* Light Theme */
+.theme-light {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e5e5e5;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4d4d4d;
+  --text-tertiary: #808080;
+  --border-color: #d4d4d4;
+  --accent-primary: #0066cc;
+  --accent-secondary: #6b21a8;
+  --glow-color: rgba(0, 102, 204, 0.08);
+  --card-hover: rgba(0, 102, 204, 0.05);
+}
+
+/* Neon Theme (Cyberpunk Vibes) */
+.theme-neon {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a0a2e;
+  --bg-tertiary: #16213e;
+  --text-primary: #00ff9f;
+  --text-secondary: #00d4ff;
+  --text-tertiary: #ff00ff;
+  --border-color: #00ff9f;
+  --accent-primary: #ff00ff;
+  --accent-secondary: #00ff9f;
+  --glow-color: rgba(0, 255, 159, 0.3);
+  --card-hover: rgba(255, 0, 255, 0.2);
+}
+
+/* Pastel Theme (Soft & Friendly) */
+.theme-pastel {
+  --bg-primary: #fef6fb;
+  --bg-secondary: #fff0f5;
+  --bg-tertiary: #ffe4f1;
+  --text-primary: #2d3748;
+  --text-secondary: #4a5568;
+  --text-tertiary: #718096;
+  --border-color: #ffc0e3;
+  --accent-primary: #ec4899;
+  --accent-secondary: #8b5cf6;
+  --glow-color: rgba(236, 72, 153, 0.1);
+  --card-hover: rgba(139, 92, 246, 0.08);
+}
+
+/* High Contrast Theme (Accessibility) */
+.theme-high-contrast {
+  --bg-primary: #000000;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #2d2d2d;
+  --text-primary: #ffffff;
+  --text-secondary: #ffff00;
+  --text-tertiary: #00ffff;
+  --border-color: #ffffff;
+  --accent-primary: #ffff00;
+  --accent-secondary: #00ffff;
+  --glow-color: rgba(255, 255, 0, 0.3);
+  --card-hover: rgba(0, 255, 255, 0.2);
+}
+
+/* Apply theme variables to body */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark theme background gradient */
+.theme-dark body {
+  background-image: radial-gradient(circle at top, var(--glow-color), transparent 40%);
+  background-repeat: no-repeat;
+}
+
+/* Light theme background gradient */
+.theme-light body {
+  background-image: radial-gradient(circle at top, var(--glow-color), transparent 60%);
+  background-repeat: no-repeat;
+}
+
+/* Neon theme background with animated lines */
+.theme-neon body {
+  background-image: 
+    linear-gradient(90deg, transparent 0%, var(--accent-primary) 50%, transparent 100%),
+    radial-gradient(circle at top, var(--glow-color), transparent 40%);
+  background-size: 200% 2px, 100% 100%;
+  background-position: -100% 0, 0 0;
+  background-repeat: no-repeat;
+  animation: neonScan 8s linear infinite;
+}
+
+/* Pastel theme soft gradient */
+.theme-pastel body {
+  background-image: 
+    linear-gradient(135deg, rgba(236, 72, 153, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+}
+
+/* High contrast theme grid pattern */
+.theme-high-contrast body {
+  background-image: 
+    linear-gradient(var(--border-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: -1px -1px;
+  opacity: 0.03;
+}
+
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out;
+}
+
+.glare-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle 300px at var(--mouse-x) var(--mouse-y),
+    rgba(255, 255, 255, 0.08)
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.group:hover .glare-effect::before,
+.tilt-card:hover .glare-effect::before {
+  opacity: 1;
+}
+
+.shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.05) 20%,
+    rgba(255, 255, 255, 0.2) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pageTransition {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes command-palette-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes command-palette-leave {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+@keyframes neonScan {
+  0% {
+    background-position: -100% 0, 0 0;
+  }
+  100% {
+    background-position: 200% 0, 0 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px var(--accent-primary), 0 0 10px var(--accent-primary);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--accent-primary), 0 0 30px var(--accent-primary);
+  }
+}
+
+/* ============================================
+   GLASSMORPHISM UTILITIES
+   ============================================ */
+
+.glass {
+  background: rgba(26, 26, 26, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.glass-dark {
+  background: rgba(13, 13, 13, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Premium gradient border effect */
+.gradient-border {
+  position: relative;
+  background: linear-gradient(var(--bg-secondary), var(--bg-secondary)) padding-box,
+              linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)) border-box;
+  border: 1px solid transparent;
+  border-radius: 12px;
+}
+
+/* Subtle glow on hover */
+.hover-glow:hover {
+  box-shadow: 0 0 30px rgba(67, 137, 255, 0.15);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* ============================================
+   SCROLL ANIMATIONS
+   ============================================ */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s ease-out forwards;
+}
+
