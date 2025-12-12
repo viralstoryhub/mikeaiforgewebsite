@@ -4,17 +4,32 @@ export default {
   theme: {
     extend: {
       colors: {
-        'dark-primary': '#0D0D0D',
-        'dark-secondary': '#1A1A1A',
-        'border-dark': '#2A2A2A',
-        'brand-primary': '#4389FF',
-        'brand-secondary': '#6E56CF',
-        'light-primary': '#F5F5F5',
-        'light-secondary': '#A3A3A3',
-        'light-tertiary': '#737373',
+        // Theme-aware colors using CSS variables
+        'dark-primary': 'var(--bg-primary)',
+        'dark-secondary': 'var(--bg-secondary)',
+        'dark-tertiary': 'var(--bg-tertiary)',
+        'border-dark': 'var(--border-color)',
+        'brand-primary': 'var(--accent-primary)',
+        'brand-secondary': 'var(--accent-secondary)',
+        'light-primary': 'var(--text-primary)',
+        'light-secondary': 'var(--text-secondary)',
+        'light-tertiary': 'var(--text-tertiary)',
       },
       boxShadow: {
-        'glow-blue': '0 0 20px rgba(67, 137, 255, 0.3)',
+        'glow-blue': '0 0 20px var(--glow-color)',
+      },
+      backgroundColor: {
+        'theme-primary': 'var(--bg-primary)',
+        'theme-secondary': 'var(--bg-secondary)',
+        'theme-tertiary': 'var(--bg-tertiary)',
+      },
+      textColor: {
+        'theme-primary': 'var(--text-primary)',
+        'theme-secondary': 'var(--text-secondary)',
+        'theme-tertiary': 'var(--text-tertiary)',
+      },
+      borderColor: {
+        'theme': 'var(--border-color)',
       },
     },
   },
