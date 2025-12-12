@@ -132,6 +132,9 @@ const Header: React.FC = () => {
             <NavLink to="/workflows" className={navLinkClass}>
               Workflows
             </NavLink>
+            <NavLink to="/news" className={navLinkClass}>
+              AI News
+            </NavLink>
             <NavLink to="/forum" className={navLinkClass}>
               Forum
             </NavLink>
@@ -200,6 +203,7 @@ const Header: React.FC = () => {
             <NavLink to="/utilities" className={mobileNavLinkClass} onClick={() => setIsMobileMenuOpen(false)}>Utilities</NavLink>
             <NavLink to="/tools" className={mobileNavLinkClass} onClick={() => setIsMobileMenuOpen(false)}>AI Tools</NavLink>
             <NavLink to="/workflows" className={mobileNavLinkClass} onClick={() => setIsMobileMenuOpen(false)}>Workflows</NavLink>
+            <NavLink to="/news" className={mobileNavLinkClass} onClick={() => setIsMobileMenuOpen(false)}>AI News</NavLink>
             <NavLink to="/forum" className={mobileNavLinkClass} onClick={() => setIsMobileMenuOpen(false)}>Community</NavLink>
             <NavLink to="/youtube" className={mobileNavLinkClass} onClick={() => setIsMobileMenuOpen(false)}>Videos</NavLink>
             <NavLink to="/about" className={mobileNavLinkClass} onClick={() => setIsMobileMenuOpen(false)}>About Mike</NavLink>
