@@ -1,5 +1,9 @@
 # Backend-only Dockerfile for Railway
-FROM node:20-alpine
+# Using Debian slim instead of Alpine for Prisma OpenSSL compatibility
+FROM node:20-slim
+
+# Install OpenSSL and other required packages
+RUN apt-get update -y && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
