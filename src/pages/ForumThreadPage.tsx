@@ -366,10 +366,10 @@ const ForumThreadPage: React.FC = () => {
     setThread((prev) =>
       prev
         ? {
-            ...prev,
-            replyCount: (prev.replyCount ?? prev.posts?.length ?? 0) + 1,
-            lastActivityAt: timestamp,
-          }
+          ...prev,
+          replyCount: (prev.replyCount ?? prev.posts?.length ?? 0) + 1,
+          lastActivityAt: timestamp,
+        }
         : prev
     );
     setPagination((prev) => {
@@ -391,10 +391,10 @@ const ForumThreadPage: React.FC = () => {
       setThread((prev) =>
         prev
           ? {
-              ...prev,
-              replyCount: (prev.replyCount ?? 0) + (createdPost.id === tempId ? 0 : 0),
-              lastActivityAt: createdPost.createdAt ?? timestamp,
-            }
+            ...prev,
+            replyCount: (prev.replyCount ?? 0) + (createdPost.id === tempId ? 0 : 0),
+            lastActivityAt: createdPost.createdAt ?? timestamp,
+          }
           : prev
       );
       if (pagination.page === pagination.totalPages || posts.length + 1 <= pagination.limit) {
@@ -408,9 +408,9 @@ const ForumThreadPage: React.FC = () => {
       setThread((prev) =>
         prev
           ? {
-              ...prev,
-              replyCount: Math.max(0, (prev.replyCount ?? 1) - 1),
-            }
+            ...prev,
+            replyCount: Math.max(0, (prev.replyCount ?? 1) - 1),
+          }
           : prev
       );
       setPagination((prev) => ({
@@ -449,11 +449,11 @@ const ForumThreadPage: React.FC = () => {
       prev.map((post) =>
         post.id === postId
           ? {
-              ...post,
-              content: trimmed,
-              isEdited: true,
-              updatedAt: new Date().toISOString(),
-            }
+            ...post,
+            content: trimmed,
+            isEdited: true,
+            updatedAt: new Date().toISOString(),
+          }
           : post
       )
     );
@@ -482,9 +482,9 @@ const ForumThreadPage: React.FC = () => {
     setThread((prev) =>
       prev
         ? {
-            ...prev,
-            replyCount: Math.max(0, (prev.replyCount ?? 1) - 1),
-          }
+          ...prev,
+          replyCount: Math.max(0, (prev.replyCount ?? 1) - 1),
+        }
         : prev
     );
     setPagination((prev) => ({
@@ -503,9 +503,9 @@ const ForumThreadPage: React.FC = () => {
       setThread((prev) =>
         prev
           ? {
-              ...prev,
-              replyCount: (prev.replyCount ?? 0) + 1,
-            }
+            ...prev,
+            replyCount: (prev.replyCount ?? 0) + 1,
+          }
           : prev
       );
       setPageError('We were unable to delete that reply. Please try again.');
@@ -520,9 +520,9 @@ const ForumThreadPage: React.FC = () => {
     setThread((prev) =>
       prev
         ? {
-            ...prev,
-            isPinned: !prev.isPinned,
-          }
+          ...prev,
+          isPinned: !prev.isPinned,
+        }
         : prev
     );
     try {
@@ -544,9 +544,9 @@ const ForumThreadPage: React.FC = () => {
     setThread((prev) =>
       prev
         ? {
-            ...prev,
-            isLocked: !prev.isLocked,
-          }
+          ...prev,
+          isLocked: !prev.isLocked,
+        }
         : prev
     );
     try {
@@ -574,17 +574,50 @@ const ForumThreadPage: React.FC = () => {
     }
   };
 
-  const renderAuthorInfo = (entity: { author?: any; authorId?: string }) => {
+  const renderAuthorInfo = (entity: { author?: any; authorId?: string }, isThreadAuthor = false) => {
     const author = entity.author ?? null;
     const displayName =
       author?.displayName ||
       author?.name ||
       author?.username ||
       'Community Member';
-    const badge = author?.role ? author.role : null;
+    const role = author?.role ?? null;
+    const subscriptionTier = author?.subscriptionTier ?? null;
     const joinedAt = author?.createdAt;
     const avatarUrl = buildAvatarUrl(displayName, author?.email, author?.profilePictureUrl);
     const totalPosts = determinePostCount(entity as ForumPost);
+    // Check if this author is the OP (original poster of the thread)
+    const isOP = thread?.authorId === entity.authorId;
+
+    // Badge styling based on role
+    const getBadgeStyles = () => {
+      const normalizedRole = role?.toLowerCase() ?? '';
+      if (['admin', 'superadmin', 'owner'].includes(normalizedRole)) {
+        return 'bg-gradient-to-r from-purple-500 to-pink-500 text-white border-purple-400/50';
+      }
+      if (['moderator', 'mod'].includes(normalizedRole)) {
+        return 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-blue-400/50';
+      }
+      if (['staff', 'support', 'editor'].includes(normalizedRole)) {
+        return 'bg-gradient-to-r from-green-500 to-emerald-500 text-white border-green-400/50';
+      }
+      return 'bg-brand-primary/10 text-brand-primary border-brand-primary/40';
+    };
+
+    const getSubscriptionBadge = () => {
+      const tier = subscriptionTier?.toLowerCase() ?? '';
+      if (['pro', 'premium', 'paid'].includes(tier)) {
+        return (
+          <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white border border-amber-400/50">
+            <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+            Pro
+          </span>
+        );
+      }
+      return null;
+    };
 
     return (
       <div className="flex flex-col items-center md:items-start md:min-w-[180px] lg:min-w-[220px]">
@@ -595,11 +628,19 @@ const ForumThreadPage: React.FC = () => {
         />
         <div className="text-center md:text-left">
           <p className="text-base font-semibold text-light-primary">{displayName}</p>
-          {badge && (
-            <span className="inline-flex items-center px-2 py-0.5 mt-1 text-xs font-semibold rounded-full bg-brand-primary/10 text-brand-primary border border-brand-primary/40">
-              {badge}
-            </span>
-          )}
+          <div className="flex flex-wrap items-center gap-1 mt-1">
+            {isOP && (
+              <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary text-white border border-brand-primary/50">
+                OP
+              </span>
+            )}
+            {role && (
+              <span className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-bold rounded-full border ${getBadgeStyles()}`}>
+                {role}
+              </span>
+            )}
+            {getSubscriptionBadge()}
+          </div>
           {joinedAt && (
             <p className="text-xs text-light-tertiary mt-2">Joined {formatDateTime(joinedAt)}</p>
           )}
@@ -944,9 +985,8 @@ const ForumThreadPage: React.FC = () => {
 
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
             <span
-              className={`text-xs ${
-                replyContent.length > REPLY_CHAR_LIMIT ? 'text-red-400' : 'text-light-tertiary'
-              }`}
+              className={`text-xs ${replyContent.length > REPLY_CHAR_LIMIT ? 'text-red-400' : 'text-light-tertiary'
+                }`}
             >
               {replyContent.length.toLocaleString()} / {REPLY_CHAR_LIMIT.toLocaleString()} characters
             </span>
