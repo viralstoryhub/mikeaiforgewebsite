@@ -39,6 +39,8 @@ const allowedOrigins = [
   'http://127.0.0.1:5173',
   'http://127.0.0.1:5174',
   'https://mikesaiforge.netlify.app',
+  'https://mikeaiforge.vercel.app',
+  'https://mikeaiforgewebsite2.vercel.app',
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
@@ -47,13 +49,16 @@ app.use(
     origin(origin, cb) {
       // Allow requests with no origin (like mobile apps, curl, Postman)
       if (!origin) return cb(null, true);
-      
+
       // Allow whitelisted origins
       if (allowedOrigins.includes(origin)) return cb(null, true);
-      
+
       // Allow any localhost port 51xx for development flexibility
       if (/^http:\/\/(localhost|127\.0\.0\.1):51\d{2}$/.test(origin)) return cb(null, true);
-      
+
+      // Allow any Vercel preview/production URLs
+      if (/\.vercel\.app$/.test(origin)) return cb(null, true);
+
       // Block other origins
       cb(new Error(`CORS blocked for ${origin}`));
     },
