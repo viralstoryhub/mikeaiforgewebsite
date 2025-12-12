@@ -1,4 +1,4 @@
- // TEMPORARY: This file includes mock authentication fallbacks
+// TEMPORARY: This file includes mock authentication fallbacks
 // Remove mock code and use only API calls once backend is running
 import type { User, AIPersona } from '../types';
 import { apiClient } from './apiClient';
@@ -11,7 +11,7 @@ const getId = (): string => {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID();
   }
-  
+
   // Fallback: Generate a UUID-like string in the format xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
   const timestamp = Date.now();
   const randomPart = Math.random().toString(16).substring(2);
@@ -20,7 +20,7 @@ const getId = (): string => {
     const v = c === 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
   });
-  
+
   return uuid;
 };
 
@@ -179,7 +179,7 @@ export const login = async (email: string, password: string): Promise<User> => {
       setMockCurrentUser(userRecord);
       return sanitizeUser(userRecord);
     }
-    
+
     // For authentication errors or other API errors, rethrow without falling back to mock
     throw error;
   }
@@ -189,11 +189,11 @@ export const signup = async (email: string, password: string, name?: string): Pr
   try {
     const response = await apiClient.post('/auth/register', { email, password, name });
     const signupData = response?.data?.data;
-    
+
     if (!signupData || !signupData.user) {
       throw new Error('Unexpected response from /auth/register: missing user data');
     }
-    
+
     const { user, accessToken, refreshToken } = signupData;
 
     localStorage.setItem('accessToken', accessToken);
@@ -429,7 +429,7 @@ export const updatePersona = async (
 
       // Whitelist of allowed persona fields that can be updated
       const allowedFields: (keyof AIPersona)[] = ['name', 'description'];
-      
+
       // Validate and filter updates to only include whitelisted fields
       const validatedUpdates: Partial<AIPersona> = {};
       for (const key of Object.keys(updates)) {
@@ -441,7 +441,7 @@ export const updatePersona = async (
       // Create a deep copy of the existing persona before merging updates
       const existingPersona = structuredClone(personas[personaIndex]);
       const originalId = existingPersona.id;
-      
+
       personas[personaIndex] = {
         ...existingPersona,
         ...validatedUpdates,
@@ -488,7 +488,8 @@ export const deletePersona = async (userId: string, personaId: string): Promise<
 export const getAllUsers = async (): Promise<User[]> => {
   try {
     const response = await apiClient.get('/admin/users');
-    return response.data.data.users;
+    // Backend returns { data: [...users], pagination: {...} }
+    return response.data.data;
   } catch (error) {
     console.warn('Backend not available, returning mock users', error);
     const users = getMockUsers();
@@ -523,7 +524,7 @@ export const deleteUserAsAdmin = async (userId: string): Promise<void> => {
     await apiClient.delete(`/admin/users/${userId}`);
   } catch (error) {
     console.warn('Backend not available, deleting mock user as admin', error);
-    
+
     // Atomic read-modify-write operation
     const users = getMockUsers();
     const userKey = findMockUserKeyById(users, userId);
