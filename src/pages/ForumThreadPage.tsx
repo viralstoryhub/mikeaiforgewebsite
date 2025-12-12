@@ -876,8 +876,46 @@ const ForumThreadPage: React.FC = () => {
                     </article>
                   )}
 
-                  {canReply && (
-                    <div className="mt-5">
+                  {/* Reactions and Quote */}
+                  <div className="mt-5 flex flex-wrap items-center gap-2">
+                    {/* Reaction buttons */}
+                    <div className="flex items-center gap-1 mr-2">
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs rounded-lg border border-border-dark bg-dark-primary/60 hover:border-green-500/40 hover:bg-green-500/10 transition group"
+                        title="Like this post"
+                      >
+                        <span className="text-sm group-hover:scale-125 transition-transform">👍</span>
+                        <span className="text-light-tertiary group-hover:text-green-400">{(post as any).likes ?? 0}</span>
+                      </button>
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs rounded-lg border border-border-dark bg-dark-primary/60 hover:border-red-500/40 hover:bg-red-500/10 transition group"
+                        title="Love this post"
+                      >
+                        <span className="text-sm group-hover:scale-125 transition-transform">❤️</span>
+                        <span className="text-light-tertiary group-hover:text-red-400">{(post as any).hearts ?? 0}</span>
+                      </button>
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs rounded-lg border border-border-dark bg-dark-primary/60 hover:border-orange-500/40 hover:bg-orange-500/10 transition group"
+                        title="Fire!"
+                      >
+                        <span className="text-sm group-hover:scale-125 transition-transform">🔥</span>
+                        <span className="text-light-tertiary group-hover:text-orange-400">{(post as any).fires ?? 0}</span>
+                      </button>
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs rounded-lg border border-border-dark bg-dark-primary/60 hover:border-yellow-500/40 hover:bg-yellow-500/10 transition group"
+                        title="Funny"
+                      >
+                        <span className="text-sm group-hover:scale-125 transition-transform">😂</span>
+                        <span className="text-light-tertiary group-hover:text-yellow-400">{(post as any).laughs ?? 0}</span>
+                      </button>
+                    </div>
+
+                    {/* Quote button */}
+                    {canReply && (
                       <button
                         type="button"
                         onClick={() => handleQuote(post)}
@@ -886,8 +924,8 @@ const ForumThreadPage: React.FC = () => {
                         <QuoteIcon className="w-4 h-4" />
                         Quote
                       </button>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

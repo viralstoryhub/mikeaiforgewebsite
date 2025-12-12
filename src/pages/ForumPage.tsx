@@ -67,7 +67,7 @@ const CategoryCard: React.FC<{
   const tiltRef = useTiltEffect<HTMLDivElement>();
   const lastActivityLabel = formatRelativeTime(
     category.lastActivityAt ||
-      getThreadActivityDate(category.recentThreads?.[0] ?? ({} as ForumThread))
+    getThreadActivityDate(category.recentThreads?.[0] ?? ({} as ForumThread))
   );
 
   return (
@@ -188,6 +188,9 @@ const ForumPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<EnrichedThread[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   const fetchCategories = useCallback(async () => {
     setLoading(true);
@@ -212,6 +215,40 @@ const ForumPage: React.FC = () => {
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
+
+  // Search functionality - search through all threads in all categories
+  const allThreads = useMemo<EnrichedThread[]>(() => {
+    const collection: EnrichedThread[] = [];
+    categories.forEach((category) => {
+      category.recentThreads?.forEach((thread) => {
+        collection.push({
+          ...thread,
+          category,
+        });
+      });
+    });
+    return collection;
+  }, [categories]);
+
+  // Filter threads based on search query
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+
+    setIsSearching(true);
+    const query = searchQuery.toLowerCase();
+    const filtered = allThreads.filter(
+      (thread) =>
+        thread.title.toLowerCase().includes(query) ||
+        thread.content?.toLowerCase().includes(query) ||
+        thread.author?.name?.toLowerCase().includes(query) ||
+        thread.category.name.toLowerCase().includes(query)
+    );
+    setSearchResults(filtered);
+  }, [searchQuery, allThreads]);
 
   const stats = useMemo(() => {
     const totalThreads = categories.reduce(
@@ -303,6 +340,12 @@ const ForumPage: React.FC = () => {
     fetchCategories();
   };
 
+  const handleSearchClear = () => {
+    setSearchQuery('');
+    setSearchResults([]);
+    setIsSearching(false);
+  };
+
   return (
     <>
       <Seo
@@ -326,157 +369,249 @@ const ForumPage: React.FC = () => {
                 get feedback from the community.
               </p>
             </div>
-          {currentUser && (
-            <button
-              type="button"
-              onClick={handleCreateThread}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-primary px-6 py-3 text-sm font-semibold text-white shadow-lg transition-transform hover:-translate-y-1 hover:bg-brand-primary/90 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-dark-primary"
-            >
-              <span>＋</span>
-              <span>Create New Thread</span>
-            </button>
-          )}
-        </header>
-
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {loading ? (
-            Array.from({ length: 3 }).map((_, index) => (
-              <div
-                key={`stats-skeleton-${index}`}
-                className="rounded-xl border border-border-dark bg-dark-secondary/60 p-6 animate-pulse"
-              >
-                <div className="h-3 w-20 bg-dark-primary rounded" />
-                <div className="mt-4 h-7 w-1/2 bg-dark-primary rounded" />
-              </div>
-            ))
-          ) : (
-            <>
-              <div className="rounded-xl border border-border-dark bg-dark-secondary p-6">
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                  Total Threads
-                </p>
-                <p className="mt-3 text-3xl font-bold text-light-primary">
-                  {stats.totalThreads.toLocaleString()}
-                </p>
-              </div>
-              <div className="rounded-xl border border-border-dark bg-dark-secondary p-6">
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                  Total Posts
-                </p>
-                <p className="mt-3 text-3xl font-bold text-light-primary">
-                  {stats.totalPosts.toLocaleString()}
-                </p>
-              </div>
-              <div className="rounded-xl border border-border-dark bg-dark-secondary p-6">
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                  Active Users Today
-                </p>
-                <p className="mt-3 text-3xl font-bold text-light-primary">
-                  {stats.activeUsersToday.toLocaleString()}
-                </p>
-              </div>
-            </>
-          )}
-        </section>
-
-        {error && !loading && (
-          <div className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
-            <div className="flex items-center justify-between">
-              <span>{error}</span>
+            {currentUser && (
               <button
                 type="button"
-                onClick={fetchCategories}
-                className="text-xs font-semibold uppercase tracking-wide text-red-200 hover:text-white"
+                onClick={handleCreateThread}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-primary px-6 py-3 text-sm font-semibold text-white shadow-lg transition-transform hover:-translate-y-1 hover:bg-brand-primary/90 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-dark-primary"
               >
-                Retry
+                <span>＋</span>
+                <span>Create New Thread</span>
               </button>
-            </div>
-          </div>
-        )}
+            )}
+          </header>
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[2fr_1fr]">
-          <section>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-semibold text-light-primary">Browse Categories</h2>
-              <Link
-                to="/forum"
-                className="hidden text-sm font-semibold text-brand-primary hover:underline md:inline-flex"
-              >
-                View All Threads →
-              </Link>
+          {/* Search Bar */}
+          <section className="relative">
+            <div className="flex items-center gap-3">
+              <div className="relative flex-1">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search threads by title, content, author, or category..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-12 pr-12 py-4 bg-dark-secondary border border-border-dark rounded-xl text-light-primary placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-all"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={handleSearchClear}
+                    className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-light-primary"
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
             </div>
 
-            {loading ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {Array.from({ length: 4 }).map((_, index) => (
-                  <CategoryCardSkeleton key={`category-skeleton-${index}`} index={index} />
-                ))}
-              </div>
-            ) : categories.length > 0 ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {categories.map((category, index) => (
-                  <CategoryCard
-                    key={category.id}
-                    category={category}
-                    index={index}
-                    onClick={handleCategoryNavigation}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="rounded-xl border border-border-dark bg-dark-secondary/60 p-8 text-center">
-                <h3 className="text-lg font-semibold text-light-primary">
-                  No categories available yet
-                </h3>
-                <p className="mt-2 text-sm text-light-secondary">
-                  Check back soon as we spin up the first community discussions.
-                </p>
+            {/* Search Results */}
+            {isSearching && (
+              <div className="mt-4 p-6 bg-dark-secondary border border-border-dark rounded-xl">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-light-primary">
+                    Search Results
+                    <span className="ml-2 text-sm font-normal text-light-secondary">
+                      ({searchResults.length} {searchResults.length === 1 ? 'thread' : 'threads'} found)
+                    </span>
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={handleSearchClear}
+                    className="text-sm text-brand-primary hover:underline"
+                  >
+                    Clear Search
+                  </button>
+                </div>
+
+                {searchResults.length > 0 ? (
+                  <div className="space-y-3">
+                    {searchResults.map((thread) => (
+                      <button
+                        key={thread.id}
+                        type="button"
+                        onClick={() => navigate(`/forum/thread/${thread.slug}`)}
+                        className="w-full text-left p-4 rounded-lg border border-border-dark bg-dark-primary hover:border-brand-primary/70 hover:bg-dark-primary/80 transition-all"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="inline-flex items-center rounded-full bg-brand-primary/10 px-2.5 py-0.5 text-xs font-semibold text-brand-primary">
+                            {thread.category.name}
+                          </span>
+                          <span className="text-xs text-light-secondary">
+                            {formatRelativeTime(getThreadActivityDate(thread))}
+                          </span>
+                        </div>
+                        <h4 className="text-base font-semibold text-light-primary">
+                          {thread.title}
+                        </h4>
+                        <div className="mt-2 flex items-center gap-4 text-xs text-light-secondary">
+                          <span>by {thread.author?.name ?? 'Anonymous'}</span>
+                          <span>•</span>
+                          <span>{(thread.replyCount ?? 0)} replies</span>
+                          <span>•</span>
+                          <span>{(thread.viewCount ?? 0)} views</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-light-secondary">
+                    <svg className="w-12 h-12 mx-auto mb-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p className="text-lg font-medium">No threads found</p>
+                    <p className="mt-1 text-sm">Try a different search term or browse categories below</p>
+                  </div>
+                )}
               </div>
             )}
           </section>
 
-          <aside className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-light-primary">Recent Activity</h3>
-              <Link
-                to="/forum"
-                className="text-xs font-semibold uppercase tracking-wide text-brand-primary hover:underline"
-              >
-                See All
-              </Link>
-            </div>
-
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {loading ? (
-              <div className="space-y-4">
-                {Array.from({ length: 4 }).map((_, index) => (
-                  <div
-                    key={`recent-skeleton-${index}`}
-                    className="h-24 rounded-lg border border-border-dark bg-dark-secondary/60 animate-pulse"
-                  />
-                ))}
-              </div>
-            ) : recentThreads.length > 0 ? (
-              <div className="space-y-4">
-                {recentThreads.map((thread) => (
-                  <RecentThreadCard key={thread.id} thread={thread} />
-                ))}
-              </div>
+              Array.from({ length: 3 }).map((_, index) => (
+                <div
+                  key={`stats-skeleton-${index}`}
+                  className="rounded-xl border border-border-dark bg-dark-secondary/60 p-6 animate-pulse"
+                >
+                  <div className="h-3 w-20 bg-dark-primary rounded" />
+                  <div className="mt-4 h-7 w-1/2 bg-dark-primary rounded" />
+                </div>
+              ))
             ) : (
-              <div className="rounded-xl border border-border-dark bg-dark-secondary/60 p-6 text-sm text-light-secondary">
-                No recent thread activity yet. Start a conversation and be the first to
-                spark the discussion!
-              </div>
+              <>
+                <div className="rounded-xl border border-border-dark bg-dark-secondary p-6">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                    Total Threads
+                  </p>
+                  <p className="mt-3 text-3xl font-bold text-light-primary">
+                    {stats.totalThreads.toLocaleString()}
+                  </p>
+                </div>
+                <div className="rounded-xl border border-border-dark bg-dark-secondary p-6">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                    Total Posts
+                  </p>
+                  <p className="mt-3 text-3xl font-bold text-light-primary">
+                    {stats.totalPosts.toLocaleString()}
+                  </p>
+                </div>
+                <div className="rounded-xl border border-border-dark bg-dark-secondary p-6">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                    Active Users Today
+                  </p>
+                  <p className="mt-3 text-3xl font-bold text-light-primary">
+                    {stats.activeUsersToday.toLocaleString()}
+                  </p>
+                </div>
+              </>
             )}
-          </aside>
-        </div>
-      </div>
+          </section>
 
-      <ForumThreadModal
-        isOpen={isModalOpen}
-        onClose={handleModalClose}
-        onThreadCreated={handleThreadCreated}
-      />
-    </div>
+          {error && !loading && (
+            <div className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+              <div className="flex items-center justify-between">
+                <span>{error}</span>
+                <button
+                  type="button"
+                  onClick={fetchCategories}
+                  className="text-xs font-semibold uppercase tracking-wide text-red-200 hover:text-white"
+                >
+                  Retry
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[2fr_1fr]">
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-semibold text-light-primary">Browse Categories</h2>
+                <Link
+                  to="/forum"
+                  className="hidden text-sm font-semibold text-brand-primary hover:underline md:inline-flex"
+                >
+                  View All Threads →
+                </Link>
+              </div>
+
+              {loading ? (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {Array.from({ length: 4 }).map((_, index) => (
+                    <CategoryCardSkeleton key={`category-skeleton-${index}`} index={index} />
+                  ))}
+                </div>
+              ) : categories.length > 0 ? (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {categories.map((category, index) => (
+                    <CategoryCard
+                      key={category.id}
+                      category={category}
+                      index={index}
+                      onClick={handleCategoryNavigation}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-xl border border-border-dark bg-dark-secondary/60 p-8 text-center">
+                  <h3 className="text-lg font-semibold text-light-primary">
+                    No categories available yet
+                  </h3>
+                  <p className="mt-2 text-sm text-light-secondary">
+                    Check back soon as we spin up the first community discussions.
+                  </p>
+                </div>
+              )}
+            </section>
+
+            <aside className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-light-primary">Recent Activity</h3>
+                <Link
+                  to="/forum"
+                  className="text-xs font-semibold uppercase tracking-wide text-brand-primary hover:underline"
+                >
+                  See All
+                </Link>
+              </div>
+
+              {loading ? (
+                <div className="space-y-4">
+                  {Array.from({ length: 4 }).map((_, index) => (
+                    <div
+                      key={`recent-skeleton-${index}`}
+                      className="h-24 rounded-lg border border-border-dark bg-dark-secondary/60 animate-pulse"
+                    />
+                  ))}
+                </div>
+              ) : recentThreads.length > 0 ? (
+                <div className="space-y-4">
+                  {recentThreads.map((thread) => (
+                    <RecentThreadCard key={thread.id} thread={thread} />
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-xl border border-border-dark bg-dark-secondary/60 p-6 text-sm text-light-secondary">
+                  No recent thread activity yet. Start a conversation and be the first to
+                  spark the discussion!
+                </div>
+              )}
+            </aside>
+          </div>
+        </div>
+
+        <ForumThreadModal
+          isOpen={isModalOpen}
+          onClose={handleModalClose}
+          onThreadCreated={handleThreadCreated}
+        />
+      </div>
     </>
   );
 };
