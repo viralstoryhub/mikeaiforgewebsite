@@ -37,16 +37,12 @@ const AI_TOOLS_DATA = [
     rating: 4.9,
     verdict:
       'The top choice for tasks requiring deep reasoning, analysis of large documents, and enterprise-level reliability.',
-    pros: ['Superior reasoning skills', 'Industry-leading context window (200K)', 'Fewer refusals and higher accuracy'],
-    cons: ['Higher cost per token', 'Slightly slower than smaller models'],
+    pros: 'Superior reasoning skills, Industry-leading context window (200K), Fewer refusals and higher accuracy',
+    cons: 'Higher cost per token, Slightly slower than smaller models',
     bestFor: 'Legal document analysis, financial modeling, and research paper reviews.',
-    quickstart: [
-      'Sign up for the Claude API.',
-      'Choose the `claude-3-opus-20240229` model.',
-      'Structure your prompt for complex analysis.',
-    ],
-    categories: ['Language Models'],
-    tags: ['Anthropic', 'Reasoning', 'Long Context', 'Enterprise'],
+    quickstart: 'Sign up for the Claude API., Choose the `claude-3-opus-20240229` model., Structure your prompt for complex analysis.',
+    categories: 'Language Models',
+    tags: 'Anthropic, Reasoning, Long Context, Enterprise',
   },
   {
     id: '3',
@@ -60,16 +56,12 @@ const AI_TOOLS_DATA = [
     rating: 4.7,
     verdict:
       'Unmatched for creating artistic, stylistic, and professional-grade imagery. The go-to for designers and artists.',
-    pros: ['Incredible artistic quality', 'Coherent and detailed images', 'Active community and frequent updates'],
-    cons: ['Interface is via Discord', 'Steep learning curve for advanced prompting'],
+    pros: 'Incredible artistic quality, Coherent and detailed images, Active community and frequent updates',
+    cons: 'Interface is via Discord, Steep learning curve for advanced prompting',
     bestFor: 'Concept art, illustrations, and photorealistic marketing visuals.',
-    quickstart: [
-      'Join the Midjourney Discord server.',
-      'Use the `/imagine` command in a newbie channel.',
-      'Experiment with style and aspect ratio parameters.',
-    ],
-    categories: ['Image Generation'],
-    tags: ['Art', 'Design', 'Creative', 'Discord'],
+    quickstart: 'Join the Midjourney Discord server., Use the `/imagine` command in a newbie channel., Experiment with style and aspect ratio parameters.',
+    categories: 'Image Generation',
+    tags: 'Art, Design, Creative, Discord',
     youtubeReviewId: 'O5nsc3f30bU',
   },
   {
@@ -84,16 +76,12 @@ const AI_TOOLS_DATA = [
     rating: 4.8,
     verdict:
       "The industry standard for lifelike AI voices. Perfect for narration, podcasts, and character voices.",
-    pros: ['Extremely realistic voices', 'Low-latency API', 'Instant voice cloning capabilities'],
-    cons: ['Free tier is limited', 'Cloning requires clear audio samples'],
+    pros: 'Extremely realistic voices, Low-latency API, Instant voice cloning capabilities',
+    cons: 'Free tier is limited, Cloning requires clear audio samples',
     bestFor: 'YouTube narration, audiobooks, and accessibility tools.',
-    quickstart: [
-      'Sign up and get a free API key.',
-      'Use the Speech Synthesis endpoint to convert text.',
-      'For cloning, upload a 1-minute audio sample without background noise.',
-    ],
-    categories: ['Audio', 'Text-to-Speech'],
-    tags: ['Voice', 'TTS', 'API', 'Audiobook'],
+    quickstart: 'Sign up and get a free API key., Use the Speech Synthesis endpoint to convert text., For cloning upload a 1-minute audio sample without background noise.',
+    categories: 'Audio, Text-to-Speech',
+    tags: 'Voice, TTS, API, Audiobook',
   },
   {
     id: '5',
@@ -107,16 +95,12 @@ const AI_TOOLS_DATA = [
     rating: 4.6,
     verdict:
       'An essential developer tool for abstracting away AI provider complexity and optimizing for cost and performance.',
-    pros: ['Single API for many models', 'Automatic fallbacks and retries', 'Cost and latency optimization'],
-    cons: ['Adds a small layer of latency', 'Model availability depends on upstream providers'],
+    pros: 'Single API for many models, Automatic fallbacks and retries, Cost and latency optimization',
+    cons: 'Adds a small layer of latency, Model availability depends on upstream providers',
     bestFor: 'Developers building AI-powered applications who need flexibility.',
-    quickstart: [
-      'Sign up and get a RouteLLM API key.',
-      'Replace your provider-specific SDK with a simple HTTP request.',
-      'Specify the model you want in the request body.',
-    ],
-    categories: ['Developer Tools', 'API'],
-    tags: ['LLM', 'Gateway', 'DevTool', 'Optimization'],
+    quickstart: 'Sign up and get a RouteLLM API key., Replace your provider-specific SDK with a simple HTTP request., Specify the model you want in the request body.',
+    categories: 'Developer Tools, API',
+    tags: 'LLM, Gateway, DevTool, Optimization',
   },
   {
     id: '6',
@@ -130,16 +114,12 @@ const AI_TOOLS_DATA = [
     rating: 4.7,
     verdict:
       'The best visual automation builder for complex, multi-step workflows without writing any code.',
-    pros: ['Intuitive visual interface', 'Extensive library of app integrations', 'Powerful logic and error handling features'],
-    cons: ['Can get expensive with high operation counts', 'Some advanced features require learning'],
+    pros: 'Intuitive visual interface, Extensive library of app integrations, Powerful logic and error handling features',
+    cons: 'Can get expensive with high operation counts, Some advanced features require learning',
     bestFor: 'Automating business processes, marketing funnels, and content pipelines.',
-    quickstart: [
-      'Sign up for a free account.',
-      'Create a new scenario and add your first module (e.g., a webhook).',
-      'Connect modules by dragging and dropping.',
-    ],
-    categories: ['Automation', 'No-Code'],
-    tags: ['Workflow', 'Integration', 'Productivity'],
+    quickstart: 'Sign up for a free account., Create a new scenario and add your first module., Connect modules by dragging and dropping.',
+    categories: 'Automation, No-Code',
+    tags: 'Workflow, Integration, Productivity',
     youtubeReviewId: 'L8gV83G2b4o',
   },
 ];
@@ -151,7 +131,7 @@ const WORKFLOWS_DATA = [
     name: 'YouTube Video to Blog Post',
     description:
       'Automatically transcribe a YouTube video, generate a summary with Gemini, and create a draft blog post in Google Docs.',
-    services: ['YouTube', 'Gemini', 'Google Docs', 'Make'],
+    services: 'YouTube, Gemini, Google Docs, Make',
     icon: 'RocketLaunchIcon',
     deploymentUrl: 'https://www.make.com/en/templates/1943-create-a-blog-post-from-a-youtube-video-using-gemini',
   },
@@ -161,7 +141,7 @@ const WORKFLOWS_DATA = [
     name: 'AI-Powered Newsletter',
     description:
       'Summarize a list of articles using Gemini, format it into a newsletter template, and send it via Mailchimp.',
-    services: ['RSS', 'Gemini', 'Mailchimp', 'Zapier'],
+    services: 'RSS, Gemini, Mailchimp, Zapier',
     icon: 'RocketLaunchIcon',
     deploymentUrl: 'https://zapier.com/apps/gemini/integrations',
   },
@@ -171,7 +151,7 @@ const WORKFLOWS_DATA = [
     name: 'Social Media Content Pipeline',
     description:
       'Take a long-form article, generate 5 unique social media posts with Gemini, and schedule them to be posted on Twitter.',
-    services: ['Web Page', 'Gemini', 'Buffer', 'Make'],
+    services: 'Web Page, Gemini, Buffer, Make',
     icon: 'RocketLaunchIcon',
     deploymentUrl: 'https://www.make.com/en/templates/1943-create-a-blog-post-from-a-youtube-video-using-gemini',
   },
@@ -181,7 +161,7 @@ const WORKFLOWS_DATA = [
     name: 'Automated Support Ticket Tagging',
     description:
       'When a new support ticket arrives in Zendesk, use Gemini to analyze the content and automatically apply relevant tags.',
-    services: ['Zendesk', 'Gemini', 'Zapier'],
+    services: 'Zendesk, Gemini, Zapier',
     icon: 'RocketLaunchIcon',
     deploymentUrl: 'https://zapier.com/apps/gemini/integrations/zendesk',
   },
@@ -399,6 +379,7 @@ async function seed() {
         createdAt: daysAgo(14),
         lastActivityAt: daysAgo(2),
         isPinned: true,
+        isLocked: false,
       },
       {
         title: 'Best tools for transcribing long videos?',
@@ -410,6 +391,7 @@ async function seed() {
         createdAt: daysAgo(10),
         lastActivityAt: daysAgo(4),
         isPinned: false,
+        isLocked: false,
       },
       {
         title: 'Share your favorite Make.com scenarios for content',
@@ -421,6 +403,7 @@ async function seed() {
         createdAt: daysAgo(7),
         lastActivityAt: daysAgo(1),
         isPinned: false,
+        isLocked: false,
       },
       {
         title: 'Feature request: Bulk import tools via CSV',
@@ -432,6 +415,7 @@ async function seed() {
         createdAt: daysAgo(20),
         lastActivityAt: daysAgo(5),
         isPinned: false,
+        isLocked: false,
       },
     ];
 
@@ -781,7 +765,7 @@ async function seed() {
           source: article.source,
           sourceUrl: article.sourceUrl,
           category: article.category,
-          tags: article.tags,
+          tags: Array.isArray(article.tags) ? article.tags.join(', ') : article.tags,
           publishedAt: article.publishedAt ?? new Date(),
           isFeatured: article.isFeatured ?? false,
           updatedAt: new Date(),
@@ -795,7 +779,7 @@ async function seed() {
           source: article.source,
           sourceUrl: article.sourceUrl,
           category: article.category,
-          tags: article.tags,
+          tags: Array.isArray(article.tags) ? article.tags.join(', ') : article.tags,
           publishedAt: article.publishedAt ?? new Date(),
           isFeatured: article.isFeatured ?? false,
           createdAt: article.publishedAt ?? new Date(),

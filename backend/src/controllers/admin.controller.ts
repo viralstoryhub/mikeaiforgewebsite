@@ -432,15 +432,15 @@ export const getAnalyticsSummary = async (req: AuthRequest, res: Response, next:
       }),
       prisma.analyticsEvent.groupBy({
         by: ['eventName'],
-        _count: { _all: true },
-        orderBy: { _count: { _all: 'desc' } },
+        _count: { eventName: true },
+        orderBy: { _count: { eventName: 'desc' } },
         take: 10,
       }),
       prisma.analyticsEvent.groupBy({
         by: ['page'],
         where: { page: { not: null } },
-        _count: { _all: true },
-        orderBy: { _count: { _all: 'desc' } },
+        _count: { page: true },
+        orderBy: { _count: { page: 'desc' } },
         take: 10,
       }),
       prisma.analyticsEvent.groupBy({
@@ -450,7 +450,7 @@ export const getAnalyticsSummary = async (req: AuthRequest, res: Response, next:
             gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
           },
         },
-        _count: { _all: true },
+        _count: { id: true },
         orderBy: { createdAt: 'asc' },
       }),
       prisma.analyticsEvent.findMany({
@@ -464,7 +464,7 @@ export const getAnalyticsSummary = async (req: AuthRequest, res: Response, next:
 
     const dailyEvents = eventsByDay.reduce<Record<string, number>>((acc, item) => {
       const dateKey = item.createdAt.toISOString().slice(0, 10);
-      acc[dateKey] = (acc[dateKey] ?? 0) + item._count._all;
+      acc[dateKey] = (acc[dateKey] ?? 0) + (item._count?.id ?? 0);
       return acc;
     }, {});
 
@@ -477,13 +477,13 @@ export const getAnalyticsSummary = async (req: AuthRequest, res: Response, next:
         },
         topEvents: topEvents.map((item) => ({
           eventName: item.eventName,
-          count: item._count._all,
+          count: item._count?.eventName ?? 0,
         })),
         topPages: topPages
           .filter((item) => item.page)
           .map((item) => ({
             page: item.page,
-            count: item._count._all,
+            count: item._count?.page ?? 0,
           })),
         dailyEvents,
         recentEvents: recentEvents.map(sanitizeAnalyticsEvent),
