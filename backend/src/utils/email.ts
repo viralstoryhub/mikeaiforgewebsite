@@ -1,15 +1,20 @@
 import sgMail from '@sendgrid/mail';
 import logger from './logger';
 
+// Determine which email service to use
+const emailService = process.env.EMAIL_SERVICE || 'sendgrid'; // 'sendgrid' or 'brevo'
 const sendgridApiKey = process.env.SENDGRID_API_KEY;
+const brevoApiKey = process.env.BREVO_API_KEY;
 const fromEmail = process.env.FROM_EMAIL || 'noreply@mikesaiforge.com';
 
-// Only initialize SendGrid if API key is provided
-if (sendgridApiKey) {
+// Initialize SendGrid if configured
+if (emailService === 'sendgrid' && sendgridApiKey) {
   sgMail.setApiKey(sendgridApiKey);
   logger.info('SendGrid email service initialized');
+} else if (emailService === 'brevo' && brevoApiKey) {
+  logger.info('Brevo email service configured');
 } else {
-  logger.warn('SENDGRID_API_KEY not set - email functionality will be disabled');
+  logger.warn(`Email service "${emailService}" not properly configured - email functionality may be disabled`);
 }
 
 interface EmailOptions {
@@ -19,23 +24,63 @@ interface EmailOptions {
   text?: string;
 }
 
+/**
+ * Send email via Brevo API using fetch
+ */
+const sendBrevoEmail = async (options: EmailOptions) => {
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'accept': 'application/json',
+      'api-key': brevoApiKey!,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      sender: { email: fromEmail, name: "Mike's AI Forge" },
+      to: [{ email: options.to }],
+      subject: options.subject,
+      htmlContent: options.html,
+      textContent: options.text,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(`Brevo API error: ${response.status} - ${JSON.stringify(errorData)}`);
+  }
+
+  return response.json();
+};
+
 export const sendEmail = async (options: EmailOptions) => {
-  if (!sendgridApiKey) {
-    logger.warn(`Email sending skipped (no API key): ${options.subject} to ${options.to}`);
+  // Check if email service is configured
+  if (emailService === 'sendgrid' && !sendgridApiKey) {
+    logger.warn(`Email sending skipped (SendGrid not configured): ${options.subject} to ${options.to}`);
     return;
   }
-  
+  if (emailService === 'brevo' && !brevoApiKey) {
+    logger.warn(`Email sending skipped (Brevo not configured): ${options.subject} to ${options.to}`);
+    return;
+  }
+
   try {
-    await sgMail.send({
-      from: fromEmail,
-      to: options.to,
-      subject: options.subject,
-      html: options.html,
-      text: options.text,
-    });
-    logger.info(`Email sent to ${options.to}`);
+    if (emailService === 'brevo') {
+      await sendBrevoEmail(options);
+      logger.info(`[Brevo] Email sent to ${options.to}`);
+    } else {
+      // Default to SendGrid
+      await sgMail.send({
+        from: fromEmail,
+        to: options.to,
+        subject: options.subject,
+        html: options.html,
+        text: options.text,
+      });
+      logger.info(`[SendGrid] Email sent to ${options.to}`);
+    }
   } catch (error: unknown) {
     logger.error('Email sending failed:', {
+      service: emailService,
       error: error instanceof Error ? error.message : error,
     });
     throw (error instanceof Error ? error : new Error('Failed to send email'));
