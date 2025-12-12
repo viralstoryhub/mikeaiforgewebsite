@@ -3,6 +3,7 @@ import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { UserIcon, SearchIcon } from './icons/UtilityIcons';
 import { useCommandPalette } from '../contexts/CommandPaletteContext';
+import ThemeToggle from './ThemeToggle';
 
 const UserMenu: React.FC = () => {
   const auth = useContext(AuthContext);
@@ -157,6 +158,7 @@ const Header: React.FC = () => {
               </div>
               <kbd className="text-xs font-mono text-gray-500 border border-gray-600 rounded-sm px-1.5 py-0.5">⌘K</kbd>
             </button>
+            <ThemeToggle />
             {auth?.currentUser ? (
               <UserMenu />
             ) : (
