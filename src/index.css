@@ -25,16 +25,16 @@
 /* Light Theme */
 .theme-light {
   --bg-primary: #ffffff;
-  --bg-secondary: #f5f5f5;
-  --bg-tertiary: #e5e5e5;
-  --text-primary: #1a1a1a;
-  --text-secondary: #4d4d4d;
-  --text-tertiary: #808080;
-  --border-color: #d4d4d4;
-  --accent-primary: #0066cc;
-  --accent-secondary: #6b21a8;
-  --glow-color: rgba(0, 102, 204, 0.08);
-  --card-hover: rgba(0, 102, 204, 0.05);
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  --text-primary: #212529;
+  --text-secondary: #495057;
+  --text-tertiary: #6c757d;
+  --border-color: #dee2e6;
+  --accent-primary: #0d6efd;
+  --accent-secondary: #6f42c1;
+  --glow-color: rgba(13, 110, 253, 0.08);
+  --card-hover: rgba(13, 110, 253, 0.05);
 }
 
 /* Neon Theme (Cyberpunk Vibes) */
@@ -70,16 +70,16 @@
 /* High Contrast Theme (Accessibility) */
 .theme-high-contrast {
   --bg-primary: #000000;
-  --bg-secondary: #1a1a1a;
-  --bg-tertiary: #2d2d2d;
+  --bg-secondary: #111111;
+  --bg-tertiary: #222222;
   --text-primary: #ffffff;
   --text-secondary: #ffff00;
   --text-tertiary: #00ffff;
   --border-color: #ffffff;
   --accent-primary: #ffff00;
   --accent-secondary: #00ffff;
-  --glow-color: rgba(255, 255, 0, 0.3);
-  --card-hover: rgba(0, 255, 255, 0.2);
+  --glow-color: rgba(255, 255, 0, 0.2);
+  --card-hover: rgba(0, 255, 255, 0.15);
 }
 
 /* Apply theme variables to body */
@@ -95,7 +95,7 @@ body {
   background-repeat: no-repeat;
 }
 
-/* Light theme background gradient */
+/* Light theme - clean look */
 .theme-light body {
   background-image: radial-gradient(circle at top, var(--glow-color), transparent 60%);
   background-repeat: no-repeat;
@@ -103,7 +103,7 @@ body {
 
 /* Neon theme background with animated lines */
 .theme-neon body {
-  background-image: 
+  background-image:
     linear-gradient(90deg, transparent 0%, var(--accent-primary) 50%, transparent 100%),
     radial-gradient(circle at top, var(--glow-color), transparent 40%);
   background-size: 200% 2px, 100% 100%;
@@ -114,18 +114,13 @@ body {
 
 /* Pastel theme soft gradient */
 .theme-pastel body {
-  background-image: 
+  background-image:
     linear-gradient(135deg, rgba(236, 72, 153, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
 }
 
-/* High contrast theme grid pattern */
+/* High contrast theme - solid background, no grid pattern */
 .theme-high-contrast body {
-  background-image: 
-    linear-gradient(var(--border-color) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
-  background-size: 50px 50px;
-  background-position: -1px -1px;
-  opacity: 0.03;
+  background-image: none;
 }
 
 .tilt-card {
@@ -140,10 +135,8 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(
-    circle 300px at var(--mouse-x) var(--mouse-y),
-    rgba(255, 255, 255, 0.08)
-  );
+  background: radial-gradient(circle 300px at var(--mouse-x) var(--mouse-y),
+      rgba(255, 255, 255, 0.08));
   opacity: 0;
   transition: opacity 0.2s ease-out;
   pointer-events: none;
@@ -163,13 +156,11 @@ body {
   bottom: 0;
   left: 0;
   transform: translateX(-100%);
-  background-image: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0,
-    rgba(255, 255, 255, 0.05) 20%,
-    rgba(255, 255, 255, 0.2) 60%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background-image: linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0,
+      rgba(255, 255, 255, 0.05) 20%,
+      rgba(255, 255, 255, 0.2) 60%,
+      rgba(255, 255, 255, 0) 100%);
   animation: shimmer 2s infinite;
 }
 
@@ -178,6 +169,7 @@ body {
     opacity: 0;
     transform: translateY(20px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -189,6 +181,7 @@ body {
     opacity: 0;
     transform: translateY(10px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -206,6 +199,7 @@ body {
     opacity: 0;
     transform: scale(0.95);
   }
+
   100% {
     opacity: 1;
     transform: scale(1);
@@ -217,6 +211,7 @@ body {
     opacity: 1;
     transform: scale(1);
   }
+
   100% {
     opacity: 0;
     transform: scale(0.95);
@@ -227,24 +222,31 @@ body {
   0% {
     background-position: -100% 0, 0 0;
   }
+
   100% {
     background-position: 200% 0, 0 0;
   }
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-20px);
   }
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 5px var(--accent-primary), 0 0 10px var(--accent-primary);
   }
+
   50% {
     box-shadow: 0 0 20px var(--accent-primary), 0 0 30px var(--accent-primary);
   }
@@ -279,7 +281,7 @@ body {
 .gradient-border {
   position: relative;
   background: linear-gradient(var(--bg-secondary), var(--bg-secondary)) padding-box,
-              linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)) border-box;
+    linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)) border-box;
   border: 1px solid transparent;
   border-radius: 12px;
 }
@@ -300,6 +302,7 @@ body {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -307,8 +310,13 @@ body {
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes scale-in {
@@ -316,6 +324,7 @@ body {
     opacity: 0;
     transform: scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -327,6 +336,7 @@ body {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -348,4 +358,3 @@ body {
 .animate-slide-up {
   animation: slide-up 0.4s ease-out forwards;
 }
-
