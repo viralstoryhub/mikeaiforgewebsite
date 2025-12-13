@@ -47,7 +47,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onClose, onSa
         e.preventDefault();
         setIsSaving(true);
         const updates: Partial<User> = { bio };
-        
+
         if (profilePictureFile && previewUrl) {
             updates.profilePictureUrl = previewUrl;
         }
@@ -88,12 +88,12 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onClose, onSa
                             </div>
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-400">Name</label>
-                          <p className="mt-1 text-light-secondary">{user.name}</p>
+                            <label className="block text-sm font-medium text-gray-400">Name</label>
+                            <p className="mt-1 text-light-secondary">{user.name}</p>
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-400">Email</label>
-                          <p className="mt-1 text-light-secondary">{user.email}</p>
+                            <label className="block text-sm font-medium text-gray-400">Email</label>
+                            <p className="mt-1 text-light-secondary">{user.email}</p>
                         </div>
                         <div>
                             <label htmlFor="bio" className="block text-sm font-medium text-light-secondary">Bio</label>
@@ -138,7 +138,7 @@ const DashboardPage: React.FC = () => {
             await updateUser(updates);
         }
     };
-    
+
     const handleUpgradeSuccess = () => {
         setIsSubModalOpen(false);
     }
@@ -151,7 +151,7 @@ const DashboardPage: React.FC = () => {
                 <EditProfileModal user={currentUser} onClose={() => setIsEditModalOpen(false)} onSave={handleSaveProfile} />
             )}
             {isSubModalOpen && (
-                 <SubscriptionModal onClose={() => setIsSubModalOpen(false)} onUpgradeSuccess={handleUpgradeSuccess} />
+                <SubscriptionModal onClose={() => setIsSubModalOpen(false)} onUpgradeSuccess={handleUpgradeSuccess} />
             )}
 
             <div className="mb-8">
@@ -165,9 +165,9 @@ const DashboardPage: React.FC = () => {
                     {/* Profile Card */}
                     <div className="bg-dark-secondary rounded-lg border border-border-dark shadow-sm p-6 text-center">
                         {currentUser.profilePictureUrl ? (
-                             <img src={currentUser.profilePictureUrl} alt="Profile" className="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-gray-700 shadow-md" />
+                            <img src={currentUser.profilePictureUrl} alt="Profile" className="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-gray-700 shadow-md" />
                         ) : (
-                             <div className="w-32 h-32 rounded-full bg-gray-700 flex items-center justify-center mx-auto mb-4 border-4 border-gray-700 shadow-md">
+                            <div className="w-32 h-32 rounded-full bg-gray-700 flex items-center justify-center mx-auto mb-4 border-4 border-gray-700 shadow-md">
                                 <UserIcon className="w-16 h-16 text-gray-500" />
                             </div>
                         )}
@@ -179,26 +179,26 @@ const DashboardPage: React.FC = () => {
                             Edit Profile
                         </button>
                     </div>
-                    
+
                     <div className="bg-dark-secondary rounded-lg border border-border-dark shadow-sm">
                         <div className="p-4 border-b border-border-dark flex items-center space-x-3">
-                             <svg className="w-6 h-6 text-brand-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4M17 3v4m-2-2h4m2 10v4m-2-2h4M5 11h14a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 012-2z" /></svg>
+                            <svg className="w-6 h-6 text-brand-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4M17 3v4m-2-2h4m2 10v4m-2-2h4M5 11h14a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 012-2z" /></svg>
                             <h3 className="text-lg font-bold text-light-primary">Membership Plan</h3>
                         </div>
                         <div className="p-6 space-y-4">
                             <div>
                                 <p className="text-sm font-medium text-gray-400">Current Plan</p>
-                                <p className={`text-2xl font-bold ${currentUser.subscriptionTier === 'Pro' ? 'text-green-500' : 'text-brand-primary'}`}>{currentUser.subscriptionTier} Tier</p>
+                                <p className={`text-2xl font-bold ${currentUser.subscriptionTier?.toLowerCase() === 'pro' ? 'text-green-500' : 'text-brand-primary'}`}>{currentUser.subscriptionTier} Tier</p>
                             </div>
-                           {currentUser.subscriptionTier === 'Free' ? (
+                            {currentUser.subscriptionTier?.toLowerCase() === 'free' ? (
                                 <button onClick={() => setIsSubModalOpen(true)} className="w-full mt-2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand-primary hover:opacity-90">
                                     Upgrade to Pro
                                 </button>
-                           ) : (
+                            ) : (
                                 <div className="p-3 bg-green-900/30 text-green-200 rounded-md text-center text-sm">
                                     You have full access to all features!
                                 </div>
-                           )}
+                            )}
                         </div>
                     </div>
 
@@ -208,9 +208,9 @@ const DashboardPage: React.FC = () => {
                             <h3 className="text-lg font-bold text-light-primary">Utility Usage</h3>
                         </div>
                         <div className="p-6">
-                           {currentUser.subscriptionTier === 'Pro' ? (
-                               <p className="text-center text-gray-300">You have unlimited access to all utilities! ✨</p>
-                           ) : (
+                            {currentUser.subscriptionTier?.toLowerCase() === 'pro' ? (
+                                <p className="text-center text-gray-300">You have unlimited access to all utilities! ✨</p>
+                            ) : (
                                 <ul className="space-y-4">
                                     {UTILITIES_DATA.map(utility => {
                                         const usage = currentUser.utilityUsage?.[utility.slug] || 0;
@@ -228,14 +228,14 @@ const DashboardPage: React.FC = () => {
                                         );
                                     })}
                                 </ul>
-                           )}
+                            )}
                         </div>
                     </div>
                 </div>
 
                 {/* Right Column */}
                 <div className="lg:col-span-2 space-y-8">
-                     <div className="bg-dark-secondary rounded-lg border border-border-dark shadow-sm">
+                    <div className="bg-dark-secondary rounded-lg border border-border-dark shadow-sm">
                         <div className="p-4 border-b border-border-dark flex items-center space-x-3">
                             <PersonaIcon className="w-6 h-6 text-brand-primary" />
                             <h3 className="text-lg font-bold text-light-primary">My AI Personas</h3>
@@ -244,7 +244,7 @@ const DashboardPage: React.FC = () => {
                             <PersonasTab />
                         </div>
                     </div>
-                     <div className="bg-dark-secondary rounded-lg border border-border-dark shadow-sm">
+                    <div className="bg-dark-secondary rounded-lg border border-border-dark shadow-sm">
                         <div className="p-4 border-b border-border-dark flex items-center space-x-3">
                             <BookmarkIcon className="w-6 h-6 text-brand-primary" />
                             <h3 className="text-lg font-bold text-light-primary">My Saved Tools</h3>
@@ -266,7 +266,7 @@ const DashboardPage: React.FC = () => {
                                 </ul>
                             ) : (
                                 <p className="text-gray-400 text-center py-4">
-                                    You haven't saved any tools yet. 
+                                    You haven't saved any tools yet.
                                     <Link to="/tools" className="text-brand-primary font-semibold hover:underline ml-1">Browse the directory</Link> to find your favorites!
                                 </p>
                             )}
