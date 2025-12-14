@@ -16,10 +16,32 @@ export const createCheckoutSession = async (
   next: NextFunction
 ) => {
   try {
-    const user = await prisma.user.findUnique({ where: { id: req.user!.id } });
+    // Validate authenticated user from JWT
+    if (!req.user || !req.user.id) {
+      logger.error('Stripe checkout: No authenticated user in request');
+      throw new AppError('Authentication required', 401);
+    }
+
+    logger.info(`Stripe checkout: Looking up user ${req.user.id}`);
+
+    const user = await prisma.user.findUnique({ where: { id: req.user.id } });
 
     if (!user) {
-      throw new AppError('User not found', 404);
+      logger.error(`Stripe checkout: User ${req.user.id} not found in database`);
+      throw new AppError('User not found in database. Please log out and sign up again.', 404);
+    }
+
+    logger.info(`Stripe checkout: Found user ${user.email}, creating session`);
+
+    // Validate Stripe environment variables
+    if (!process.env.STRIPE_PRO_PRICE_ID) {
+      logger.error('STRIPE_PRO_PRICE_ID environment variable not set');
+      throw new AppError('Stripe configuration error', 500);
+    }
+
+    if (!process.env.FRONTEND_URL) {
+      logger.error('FRONTEND_URL environment variable not set');
+      throw new AppError('Server configuration error', 500);
     }
 
     const session = await stripe.checkout.sessions.create({
@@ -27,23 +49,40 @@ export const createCheckoutSession = async (
       payment_method_types: ['card'],
       line_items: [
         {
-          price: process.env.STRIPE_PRO_PRICE_ID!,
+          price: process.env.STRIPE_PRO_PRICE_ID,
           quantity: 1,
         },
       ],
       mode: 'subscription',
-      success_url: `${process.env.FRONTEND_URL}/dashboard?success=true`,
-      cancel_url: `${process.env.FRONTEND_URL}/dashboard?canceled=true`,
+      success_url: `${process.env.FRONTEND_URL}/#/dashboard?success=true`,
+      cancel_url: `${process.env.FRONTEND_URL}/#/dashboard?canceled=true`,
       metadata: {
         userId: user.id,
       },
     });
 
+    logger.info(`Stripe checkout: Session created ${session.id} for user ${user.email}`);
+
     res.json({ status: 'success', data: { sessionId: session.id, url: session.url } });
-  } catch (error) {
+  } catch (error: any) {
+    // Log detailed error for debugging
+    logger.error('Stripe checkout error:', {
+      message: error.message,
+      code: error.code,
+      type: error.type,
+      userId: req.user?.id,
+      stack: error.stack?.split('\n').slice(0, 5).join('\n'),
+    });
+
+    // For Stripe-specific errors, provide more context
+    if (error.type === 'StripeInvalidRequestError') {
+      return next(new AppError(`Stripe error: ${error.message}`, 400));
+    }
+
     next(error);
   }
 };
+
 
 export const createPortalSession = async (
   req: AuthRequest,
