@@ -79,13 +79,17 @@ export const sendEmail = async (options: EmailOptions) => {
       logger.info(`[SendGrid] Email sent to ${options.to}`);
     }
   } catch (error: unknown) {
-    logger.error('Email sending failed:', {
+    // Log error but DO NOT throw - email failure should not block registration
+    logger.error('Email sending failed (non-blocking):', {
       service: emailService,
+      to: options.to,
+      subject: options.subject,
       error: error instanceof Error ? error.message : error,
     });
-    throw (error instanceof Error ? error : new Error('Failed to send email'));
+    // Don't throw - let registration/other operations continue even if email fails
   }
 };
+
 
 export const sendWelcomeEmail = async (email: string, name: string) => {
   await sendEmail({
