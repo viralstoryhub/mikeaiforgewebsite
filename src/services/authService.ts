@@ -201,7 +201,17 @@ export const signup = async (email: string, password: string, name?: string): Pr
     localStorage.setItem('user', JSON.stringify(user));
 
     return user;
-  } catch (error) {
+  } catch (error: any) {
+    // Only fallback to mock authentication for network errors (no response from server)
+    // If error.response exists, it means the server responded with an error
+    if (error.response !== undefined) {
+      // Server responded with error - don't use mock, rethrow the actual error
+      const message = error.response?.data?.message || error.message || 'Signup failed';
+      console.error('Signup failed with server error:', message);
+      throw new Error(message);
+    }
+
+    // Network error (server unreachable) - fallback to mock
     console.warn('Backend not available, using mock authentication for signup', error);
     const users = getMockUsers();
 
@@ -228,6 +238,7 @@ export const signup = async (email: string, password: string, name?: string): Pr
     setMockTokens();
     setMockCurrentUser(newUser);
     return sanitizeUser(newUser);
+
   }
 };
 
