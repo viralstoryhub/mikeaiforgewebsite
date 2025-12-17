@@ -365,7 +365,17 @@ export const upgradeSubscription = async (userId: string): Promise<User> => {
     }
 
     throw new Error('User session not found');
-  } catch (error) {
+  } catch (error: any) {
+    // Only fallback to mock for network errors (server unreachable)
+    // If error.response exists, it means the server responded with an error
+    if (error.response !== undefined) {
+      // Server responded with error - DON'T use mock, show the actual error
+      const message = error.response?.data?.message || error.message || 'Failed to create checkout session';
+      console.error('Stripe checkout failed with server error:', message);
+      throw new Error(message);
+    }
+
+    // Network error (server unreachable) - fallback to mock
     console.warn('Backend not available, upgrading subscription in mock data', error);
     const users = getMockUsers();
     const userKey = findMockUserKeyById(users, userId);
@@ -385,6 +395,7 @@ export const upgradeSubscription = async (userId: string): Promise<User> => {
     return sanitizeUser(updatedUser);
   }
 };
+
 
 export const addPersona = async (userId: string, persona: Omit<AIPersona, 'id'>): Promise<User> => {
   try {
