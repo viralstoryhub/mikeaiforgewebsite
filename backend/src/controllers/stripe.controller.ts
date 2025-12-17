@@ -75,13 +75,20 @@ export const createCheckoutSession = async (
     });
 
     // For Stripe-specific errors, provide more context
-    if (error.type === 'StripeInvalidRequestError') {
+    if (error.type === 'StripeInvalidRequestError' || error.type === 'StripeAuthenticationError') {
       return next(new AppError(`Stripe error: ${error.message}`, 400));
     }
 
-    next(error);
+    // For any other error, return the actual message (not generic Internal Server Error)
+    if (error instanceof AppError) {
+      return next(error);
+    }
+
+    // Return actual error message for debugging
+    return next(new AppError(error.message || 'Failed to create checkout session', 500));
   }
 };
+
 
 
 export const createPortalSession = async (
